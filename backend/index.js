@@ -23,3 +23,7 @@ mongoose
     );
   })
   .catch((err) => console.error("MongoDB connection error:", err));
+
+
+  const authRoutes = require("./routes/auth.route");
+app.use("/api/auth", authRoutes);
