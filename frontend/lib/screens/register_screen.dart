@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/home_screen.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
 
@@ -22,9 +23,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     if (success) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      // Show success dialog
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Success"),
+          content: const Text("Registration completed successfully!"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                Navigator.pushReplacement( // Navigate to HomeScreen
+                  context,
+                  MaterialPageRoute(builder: (_) => HomeScreen()),
+                );
+              },
+              child: const Text("Continue"),
+            ),
+          ],
+        ),
       );
     } else {
       setState(() => errorMsg = "Registration failed");
@@ -52,8 +69,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextButton.icon(
                   onPressed: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   },
                   icon: const Icon(Icons.login, size: 18, color: Colors.white),
