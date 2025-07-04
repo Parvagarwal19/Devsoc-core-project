@@ -16,10 +16,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void register() async {
     final success = await AuthService.register(
-      usernameController.text,
-      emailController.text,
-      passwordController.text,
+      usernameController.text.trim(),
+      emailController.text.trim(),
+      passwordController.text.trim(),
     );
+
     if (success) {
       Navigator.pushReplacement(
         context,
@@ -33,30 +34,118 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            if (errorMsg != null)
-              Text(errorMsg!, style: const TextStyle(color: Colors.red)),
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+      backgroundColor: const Color(0xFF5D7A84), // bluish background
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+            color: Colors.amber,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Register ",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.login, size: 18, color: Colors.white),
+                  label: const Text("Login", style: TextStyle(color: Colors.white)),
+                )
+              ],
             ),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+          ),
+
+          // Form
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (errorMsg != null)
+                    Text(
+                      errorMsg!,
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  const SizedBox(height: 20),
+
+                  const Text("Username", style: TextStyle(color: Colors.white)),
+                  TextField(
+                    controller: usernameController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your name',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20),
+
+                  const Text("Email", style: TextStyle(color: Colors.white)),
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter an email',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 20),
+
+                  const Text("Password", style: TextStyle(color: Colors.white)),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Required 6+ characters',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(height: 40),
+
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: register,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.indigo,
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                      ),
+                      child: const Text("Register"),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(onPressed: register, child: const Text('Register')),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
