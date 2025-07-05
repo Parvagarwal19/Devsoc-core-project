@@ -1,19 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const Expense = require("../models/Expense");
+const authMiddleware = require("../middleware/authMiddleware");
 
-// GET all expenses (sorted by most recent first)
-router.get("/", async (req, res) => {
+// GET all expenses for the logged-in user
+router.get("/", authMiddleware, async (req, res) => {
   try {
-    const expenses = await Expense.find().sort({ date: -1 });
+    const expenses = await Expense.find({ userId: req.user.userId }).sort({ date: -1 });
     res.json(expenses);
   } catch (err) {
     res.status(500).json({ message: "Error fetching expenses" });
   }
 });
 
-// POST a new expense
-router.post("/", async (req, res) => {
+// POST a new expense for the logged-in user
+router.post("/", authMiddleware, async (req, res) => {
   const { title, amount, category, date } = req.body;
 
   if (!title || !amount || !category || !date) {
@@ -25,7 +26,8 @@ router.post("/", async (req, res) => {
       title,
       amount,
       category,
-      date: new Date(date), // 🔁 Ensure it's a valid Date object
+      date: new Date(date),
+      userId: req.user.userId, // 👈 attach logged-in user
     });
 
     await newExpense.save();
@@ -36,4 +38,3 @@ router.post("/", async (req, res) => {
 });
 
 module.exports = router;
-  
